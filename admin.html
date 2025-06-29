@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Panel - Add Products</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    body {
+      background-color: #f2f2f2;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      background-color: #1C1D3C;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .form-container, .product-list {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+    }
+
+    button {
+      padding: 10px;
+      border: none;
+      background-color: #1C1D3C;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .delete-btn {
+      background-color: crimson;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .product-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .product-table th, .product-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .product-table th {
+      background-color: #1C1D3C;
+      color: white;
+    }
+
+    .product-table img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>Admin - Manage New Launches</h2>
+  </header>
+
+  <div class="form-container">
+    <h3>Add New Product</h3>
+    <input type="text" id="productName" placeholder="Product Name" />
+    <input type="text" id="productImage" placeholder="Image URL" />
+    <input type="text" id="productDesc" placeholder="Description" />
+    <input type="text" id="productPrice" placeholder="Price (Rs.)" />
+    <button onclick="addProduct()">Add Product</button>
+  </div>
+
+  <div class="product-list" id="productList"></div>
+
+  <script>
+    let products = JSON.parse(localStorage.getItem("newLaunches")) || [];
+
+    function saveAndRender() {
+      localStorage.setItem("newLaunches", JSON.stringify(products));
+      renderProducts();
+    }
+
+    function addProduct() {
+      const name = document.getElementById("productName").value;
+      const image = document.getElementById("productImage").value;
+      const desc = document.getElementById("productDesc").value;
+      const price = document.getElementById("productPrice").value;
+
+      if (!name || !image || !desc || !price) {
+        alert("Please fill all fields.");
+        return;
+      }
+
+      const product = {
+        id: Date.now(),
+        name,
+        image,
+        desc,
+        price
+      };
+
+      products.push(product);
+      saveAndRender();
+
+      document.getElementById("productName").value = "";
+      document.getElementById("productImage").value = "";
+      document.getElementById("productDesc").value = "";
+      document.getElementById("productPrice").value = "";
+    }
+
+    function deleteProduct(id) {
+      products = products.filter(p => p.id !== id);
+      saveAndRender();
+    }
+
+    function renderProducts() {
+      const container = document.getElementById("productList");
+      if (products.length === 0) {
+        container.innerHTML = "<h3>No Products Added Yet</h3>";
+        return;
+      }
+
+      let tableHTML = `
+        <h3>Newly Launched Products</h3>
+        <table class="product-table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Price (Rs.)</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      products.forEach(p => {
+        tableHTML += `
+          <tr>
+            <td><img src="${p.image}" alt="${p.name}" /></td>
+            <td>${p.name}</td>
+            <td>${p.desc}</td>
+            <td>${p.price}</td>
+            <td><button class="delete-btn" onclick="deleteProduct(${p.id})">Delete</button></td>
+          </tr>
+        `;
+      });
+
+      tableHTML += `
+          </tbody>
+        </table>
+      `;
+
+      container.innerHTML = tableHTML;
+    }
+
+    renderProducts();
+  </script>
+</body>
+</html>

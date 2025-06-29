@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+ 
+  <title>Login & Register</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: #333;
+      padding: 30px;
+      border-radius: 10px;
+      width: 360px;
+      box-shadow: 0 0 15px darkblue ;
+      color: #fff;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      margin-top: 10px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-login {
+      background-color:rgb(28, 28, 203);
+      color: white;
+    }
+
+    
+    .btn-register {
+      background-color:blue;
+      color: white;
+    }
+
+    .toggle-link {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 0.9em;
+    }
+
+    .toggle-link a {
+      color:#fff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .form-section {
+      display: none;
+    }
+
+    .form-section.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="loginForm" class="form-section active">
+      <h2>Login</h2>
+      <input type="text" id="loginUser" placeholder="Username" />
+      <input type="password" id="loginPass" placeholder="Password" />
+      
+      <button class="btn-login" onclick="validateLogin()">Login</button>
+      <div class="toggle-link">
+        Don't have an account? <a onclick="toggleForms()">Register</a>
+      </div>
+    </div>
+
+    <div id="registerForm" class="form-section">
+      <h2>Register</h2>
+      <input type="text" id="regUser" placeholder="Username" />
+      <input type="email" id="regEmail" placeholder="Email" />
+      <input type="password" id="regPass" placeholder="Password" />
+      <input type="password" id="confirmPass" placeholder="Confirm Password" />
+      <button class="btn-register" onclick="submitRegistration()">Register</button>
+      <div class="toggle-link">
+        Already have an account? <a onclick="toggleForms()">Login</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleForms() {
+      document.getElementById("loginForm").classList.toggle("active");
+      document.getElementById("registerForm").classList.toggle("active");
+    }
+
+    function validateLogin() {
+      const user = document.getElementById("loginUser").value;
+      const pass = document.getElementById("loginPass").value;
+
+      const storedUser = localStorage.getItem("username");
+      const storedPass = localStorage.getItem("password");
+  if(user=="admin" && pass=="admin@123") {
+  alert("admin login successful");
+  localStorage.setItem("loggedIn","true");
+  window.location.href="/admin/admin.html";
+}
+
+      if ((user === "lakshi" && pass === "1234") || (user === storedUser && pass === storedPass)) {
+        alert("Login Successful!");
+        localStorage.setItem("loggedIn", "true");
+        window.location.href = "/showroom/showroom.html"
+      } 
+      
+      else {
+        alert("Invalid username or password.");
+      }
+      
+    }
+
+    function submitRegistration() {
+      const username = document.getElementById("regUser").value;
+      const email = document.getElementById("regEmail").value;
+      const password = document.getElementById("regPass").value;
+      const confirmPass = document.getElementById("confirmPass").value;
+
+      if (!username || !email || !password || !confirmPass) {
+        alert("All fields are required.");
+        return;
+      }
+
+      if (password !== confirmPass) {
+        alert("Passwords do not match.");
+        return;
+      }
+
+      localStorage.setItem("username", username);
+      localStorage.setItem("email", email);
+      localStorage.setItem("password", password);
+
+      alert("Registration successful! Please login.");
+      toggleForms();
+    }
+  </script>
+</body>
+</html>

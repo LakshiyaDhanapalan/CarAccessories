@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Order Summary - Car Accessories</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      min-height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      background-color: #1C1D3C;
+      color: white;
+      padding: 1rem 2rem;
+      text-align: center;
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
+      box-sizing: border-box;
+    }
+    .summary-container {
+      max-width: 60%;
+      width: 100%;
+      margin: 40px 0;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      padding: 40px 30px;
+    }
+    h2 {
+      color: #1C1D3C;
+      margin-top: 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 24px;
+    }
+    th, td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+    }
+    th {
+      background: #f0f0f0;
+    }
+    .total-row td {
+      font-weight: bold;
+      color: #1C1D3C;
+      border-top: 2px solid #1C1D3C;
+      font-size: 18px;
+    }
+    .empty-cart {
+      font-style: italic;
+      color: #888;
+      text-align: center;
+      margin: 40px 0;
+    }
+    .back-btn {
+      display: inline-block;
+      background: #1C1D3C;
+      color: #fff;
+      padding: 10px 24px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      margin-top: 20px;
+    }
+    @media(max-width: 768px) {
+      .summary-container {
+        max-width: 95%;
+        padding: 20px 5px;
+      }
+      table, th, td {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Order Summary</h1>
+  </header>
+  <div class="summary-container">
+    <h2>Your Cart</h2>
+    <div id="cart-summary"></div>
+    <a href="checkout.html" class="back-btn">Back to Checkout</a>
+    <button id="placeOrderBtn" class="back-btn" style="background:#28a745;margin-left:10px;">Place Order</button>
+  </div>
+  <div id="order-popup" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:#fff;padding:40px 30px;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.2);text-align:center;position:relative;min-width:320px;">
+      <canvas id="popperCanvas" width="320" height="180" style="position:absolute;top:0;left:0;pointer-events:none;"></canvas>
+      <h2 style="color:#28a745;">🎉 Congrats! Your order has been placed!!</h2>
+      <button id="continueShoppingBtn" class="back-btn" style="background:#1C1D3C;margin-top:20px;">Continue Shopping</button>
+    </div>
+  </div>
+  <script>
+    function renderOrderSummary() {
+      const cartData = JSON.parse(localStorage.getItem("cart")) || [];
+      const container = document.getElementById("cart-summary");
+      container.innerHTML = "";
+      if (cartData.length === 0) {
+        container.innerHTML = "<div class='empty-cart'>Your cart is empty.</div>";
+        return;
+      }
+      let total = 0;
+      let table = `<table><thead><tr><th>Item</th><th>Qty</th><th>Price</th><th>Subtotal</th><th>Action</th></tr></thead><tbody>`;
+      cartData.forEach((item, idx) => {
+        const price = Number(item.price) || 0;
+        const quantity = Number(item.quantity) || 0;
+        const subtotal = price * quantity;
+        total += subtotal;
+        table += `<tr><td>${item.name}</td><td><button onclick='updateCount(${idx},-1)' style='padding:2px 8px;margin-right:4px;'>-</button>${quantity}<button onclick='updateCount(${idx},1)' style='padding:2px 8px;margin-left:4px;'>+</button></td><td>Rs. ${price}</td><td>Rs. ${subtotal}</td><td><button onclick='removeItem(${idx})' style='background:#e53935;color:#fff;border:none;padding:4px 10px;border-radius:3px;cursor:pointer;font-size:13px;'>Remove</button></td></tr>`;
+      });
+      table += `<tr class='total-row'><td colspan='3'>Total</td><td colspan='2'>Rs. ${total}</td></tr>`;
+      table += `</tbody></table>`;
+      container.innerHTML = table;
+    }
+
+    function removeItem(idx) {
+      let cartData = JSON.parse(localStorage.getItem("cart")) || [];
+      cartData.splice(idx, 1);
+      localStorage.setItem("cart", JSON.stringify(cartData));
+      renderOrderSummary();
+    }
+
+    function updateCount(idx, delta) {
+      let cartData = JSON.parse(localStorage.getItem("cart")) || [];
+      if (!cartData[idx]) return;
+      cartData[idx].quantity += delta;
+      if (cartData[idx].quantity < 1) cartData[idx].quantity = 1;
+      localStorage.setItem("cart", JSON.stringify(cartData));
+      renderOrderSummary();
+    }
+
+    document.getElementById("placeOrderBtn").addEventListener("click", function() {
+      document.getElementById("order-popup").style.display = "flex";
+      firePoppers();
+      // Optionally clear the cart after placing order
+      localStorage.setItem("cart", JSON.stringify([]));
+      renderOrderSummary();
+    });
+    document.getElementById("continueShoppingBtn").addEventListener("click", function() {
+      window.location.href = "showroom.html";
+    });
+    // Popper burst effect
+    function firePoppers() {
+      const canvas = document.getElementById('popperCanvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      const poppers = [];
+      for(let i=0;i<30;i++) {
+        poppers.push({
+          x: canvas.width/2,
+          y: canvas.height/2,
+          angle: Math.random()*2*Math.PI,
+          speed: 2+Math.random()*3,
+          color: `hsl(${Math.random()*360},90%,60%)`,
+          radius: 4+Math.random()*4,
+          alpha: 1
+        });
+      }
+      let frame = 0;
+      function animate() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        poppers.forEach(p => {
+          p.x += Math.cos(p.angle)*p.speed;
+          p.y += Math.sin(p.angle)*p.speed;
+          p.speed *= 0.97;
+          p.alpha *= 0.98;
+          ctx.globalAlpha = p.alpha;
+          ctx.beginPath();
+          ctx.arc(p.x,p.y,p.radius,0,2*Math.PI);
+          ctx.fillStyle = p.color;
+          ctx.fill();
+        });
+        ctx.globalAlpha = 1;
+        frame++;
+        if(frame<60) requestAnimationFrame(animate);
+      }
+      animate();
+    }
+
+    renderOrderSummary();
+  </script>
+</body>
+</html>

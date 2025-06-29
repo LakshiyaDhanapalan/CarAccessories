@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Product Details - Car Accessories</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      min-height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      background-color: #1C1D3C;
+      color: white;
+      padding: 1rem 2rem;
+      text-align: center;
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
+      box-sizing: border-box;
+    }
+    .detail-container {
+      max-width: 600px;
+      width: 100%;
+      margin: 40px 0;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      padding: 40px 30px;
+      text-align: center;
+    }
+    .product-img {
+      width: 100%;
+      max-width: 320px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    .product-title {
+      color: #FFCE1B;
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    .product-price {
+      color: #1C1D3C;
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+    .product-desc {
+      color: #222;
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+    }
+    .back-btn {
+      display: inline-block;
+      background: #1C1D3C;
+      color: #fff;
+      padding: 10px 24px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      margin-top: 20px;
+    }
+    .add-to-cart-btn {
+      background: linear-gradient(135deg, #FFCE1B, #d4aa00);
+      color: #fff;
+      padding: 10px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Product Details</h1>
+  </header>
+  <div class="detail-container" id="productDetail"></div>
+  <script>
+    // Product data (should match showroom.html)
+    const products = [
+      {
+        name: "Arm rest console with USB charging",
+        price: 4999,
+        image: "/images/Hc6bec58b55e8441fa8e08de4d02869c8k.jpg_720x720q50.avif",
+        desc: `<ul style="text-align:left; margin:0 0 0 1.2em;">
+  <li><b>Material:</b> Soft PU leather and high quality ABS plastic. The armrest lid is made of high quality leather for comfortable arm support. The lid can be raised up and down to adjust the most comfortable rest position. Suitable for both driver and front passenger. (Length: 34 cm, Width: 15 cm, Height: 14 cm)</li>
+  <li><b>Large Storage Space:</b> Spacious storage box can hold 3 cans of cola and helps you store small items, keeping your car interior clean and organized.</li>
+  <li><b>Multifunctional Design:</b> Features 7 USB ports to charge phones for both front and rear passengers. Includes cup holder and removable ashtray. Retractable hidden ashtray handles soot and butts for rear seat passengers, keeping your interior clean.</li>
+  <li><b>Simple Installation:</b> The armrest can be raised 3 cm and moved 4 cm forward for optimal comfort, improving your driving experience.</li>
+</ul>`},
+      {
+        name: "Gear stick",
+        price: 2499,
+        image: "/images/gear_stick_lightning.jpg",
+        desc: `Unique Design: The LED shift knob has multicolor gradient effect, 7 colors gradient brings cool visual impact, the smooth surface with material can improve the comfort of operation, provide faster and safer shift and give you better control of your cool car.<br><br>
+Easy to Install: The shift knob is easy and convenient to install, knob shifter just removing your old gear knob, then install the knob back to your car. No modifications, tools, drilling or cutting needed.<br><br>
+Widely Application: The gear stick knob is widely used, it can be used for most manual vehicle and most manual and automatic transmission vehicle, SUV or trucks. But this shift knob is not adapted to all cars.<br><br>
+GIVE YOUR CAR SPORTY LOOK.`
+      },
+      {
+        name: "Multi-Pocket Car Seat Organizer",
+        price: 900,
+        image: "/images/pouch.jpg",
+        desc: `<ul style="text-align:left; margin:0 0 0 1.2em;">
+  <li><b>Efficient Car Storage:</b> Neodrift Seat Master Lite maximizes your car's interior space, keeping it clutter-free with dedicated pockets for gadgets, bottles, tissues, and more.</li>
+  <li><b>Universal Fit:</b> Designed to fit most car seats, making it ideal for daily commutes or road trips. Keeps belongings secure and easily accessible.</li>
+  <li><b>Durable and Reliable:</b> Made from high-quality materials for longevity and resistance to wear and tear. Provides a sturdy storage solution for all your needs.</li>
+  <li><b>Sleek and Stylish:</b> Features a modern design that elevates your car's interior while keeping it organized. Adds a touch of sophistication to your vehicle.</li>
+  <li><b>Easy Installation:</b> Hassle-free to install and remove, perfect for families and individuals. Enjoy a clutter-free, organized car with this user-friendly organizer.</li>
+</ul>`
+      },
+      {
+        name: "Steering Wheel Cover",
+        price: 1199,
+        image: "/images/steering_wheel_cover.webp",
+        desc: `<ul style="text-align:left; margin:0 0 0 1.2em;">
+  <li><b>Universal Fit:</b> Suitable for steering wheels with a diameter of 14.5" to 15".</li>
+  <li><b>Material Type:</b> Made of smooth and durable genuine leather.</li>
+  <li><b>High Quality & Non-Slip:</b> Features anti-fade coloring, easy installation, and a non-slip design for enhanced grip and safety.</li>
+  <li><b>Hand & Wheel Protection:</b> Shields your hands from hot steering wheels in summer and cold ones in winter. Protects your original steering wheel from wear and tear.</li>
+  <li><b>Healthy & Eco-friendly:</b> Crafted from materials that are safe for you and the environment.</li>
+</ul>`
+      },
+      {
+        name: "Ambient Interior LED Strip Light",
+        price: 1199,
+        image: "/images/car_lights.jpg",
+        desc: `<ul style="text-align:left; margin:0 0 0 1.2em;">
+  <li><b>Immersive Car Interior Lighting:</b> GoMechanic's 9x4 LED strip lights create a vibrant, decorative atmosphere inside your car for an enhanced driving experience.</li>
+  <li><b>Wireless Remote Control:</b> Easily customize colors, brightness, and activate the sound-active function with the included wireless remote.</li>
+  <li><b>Multicolour LED Strips:</b> Select from a wide spectrum of colors to match your mood and style, adding luxury and uniqueness to your car's interior.</li>
+  <li><b>Sound Active Function:</b> Sync the LED lights to your music or engine rhythm, transforming your car into a mobile party or a relaxing sanctuary.</li>
+  <li><b>Easy Installation:</b> DC 12V LED strips with adhesive backing for secure fit. Plug into your car's USB port or connect to the power source—no special tools required.</li>
+  <li><b>Versatile Decoration:</b> Perfect for cars and also great for USB-powered star lamps, room decor, and more.</li>
+  <li><b>Premium Quality:</b> Features 36 high-intensity LEDs for long-lasting, atmospheric illumination and a sophisticated look.</li>
+</ul>`
+      },
+      {
+        name: "Dual Beam LED Fog Lights",
+        price: 2999,
+        image: "/images/fog_lights.jpg",
+        desc: `<ul style="text-align:left; margin:0 0 0 1.2em;">
+  <li><b>Super Bright & Clear Fog Light:</b> Eltron Turbo 2x2 pattern High Intensity LEDs with high transmission lens deliver a powerful 6000k/1500lm spot and flood combo beam for long-distance illumination in darkness.</li>
+  <li><b>Heavy Duty & Perfect Design:</b> Aviation-grade aluminium body with heat sinks ensures excellent heat dissipation and a lifespan of over 50,000 hours. Water-resistant and anti-dust design for reliable performance in harsh conditions.</li>
+  <li><b>Adjustable Mounting Bracket:</b> Includes adjustable stainless steel brackets for flexible installation and easy adjustment of the lighting angle to suit your needs.</li>
+  <li><b>Combination of White & Amber Light:</b> Features a perfect blend of bright white and amber light in one projector fog lamp, using superior quality LED chips for powerful, long-distance illumination.</li>
+  <li><b>Versatile Mounting Options:</b> Can be mounted on the front bumper, bull bar, lower bumper opening, front grill, roof rack, or rear step bumper to replace original lights, fog lights, tail lights, or reverse lights.</li>
+</ul>`
+      },
+      {
+        name: "High Beam Headlight Bulbs",
+        price: 2899,
+        image: "/images/Headlight-Types.webp",
+        desc: `<ul style="text-align:left; margin:0 0 0 1.2em;">
+  <li><b>IP65 Waterproof & Dustproof:</b> Mx LED Headlight is rated IP65, making it resistant to water and dust for reliable performance in all weather and a prolonged lifespan.</li>
+  <li><b>External Canbus Driver:</b> Equipped with an external Canbus driver to prevent errors in almost all cars and ensure stable LED operation even with fluctuating current.</li>
+  <li><b>Efficient Cooling Fan:</b> Features a high-speed, silent fan that rapidly reduces heat, extending the product's life.</li>
+  <li><b>Double Copper Heat Pipe:</b> Utilizes a vacuum liquid conduction system for rapid heat transfer to the fan, enhancing LED stability and longevity.</li>
+  <li><b>Compatibility Note:</b> These bulbs are not universal. Please check your car’s user manual, size chart, or consult your service provider or our customer care before purchasing to ensure compatibility.</li>
+</ul>`
+      },
+      {
+        name: "Strip lights",
+        price: 999,
+        image: "/images/strip  lights.webp",
+        desc: `<ul style="text-align:left; margin:0 0 0 1.2em;">
+  <li><b>🎵 Music Sync & Sound Activated:</b> Lights pulse and change colors to the beat of your music, creating a dynamic in-car ambiance.</li>
+  <li><b>🚗 Universal Fit for All Cars:</b> Compatible with any vehicle model for easy installation and instant mood lighting.</li>
+  <li><b>🌈 12 Multicolor LED Lights:</b> Bright, vibrant colors let you customize your car interior atmosphere and enhance your driving experience.</li>
+  <li><b>🔧 Simple Installation:</b> Flexible strip lights with adhesive backing make setup quick and hassle-free.</li>
+</ul>`
+      },
+      {
+        name: "Mobile holder",
+        price: 799,
+        image: "/images/mobile_holders.webp",
+        desc: `<ul style="text-align:left; margin:0 0 0 1.2em;">
+  <li><b>Secure AC Vent Mount:</b> Easily attaches to your car’s air vent, keeping your phone stable and within easy reach. The Portronics Clamp Z design ensures your phone remains secure even on bumpy roads.</li>
+  <li><b>Strong & Steady Grip:</b> Provides a firm and stable hold, preventing your phone from slipping or swaying during your journey.</li>
+  <li><b>Effortless One-Hand Operation:</b> Operate your phone with one hand for safety and convenience. Quick mounting and removal with a simple design.</li>
+  <li><b>Durable Shockproof ABS Build:</b> Made from high-quality ABS material to absorb impacts and protect your phone, ensuring long-lasting durability.</li>
+  <li><b>180° Adjustable Rotation:</b> Freely rotate to find the perfect viewing angle for navigation and calls, enhancing driving convenience and safety.</li>
+  <li><b>Universal Compatibility:</b> Fits smartphones from 5.4" to 6.7", providing a secure fit for a wide range of devices.</li>
+</ul>`
+      },
+      {
+        name: "Car vaccum cleansers",
+        price: 1999,
+        image: "/images/vaccum.webp",
+        desc: `<ul style="text-align:left; margin:0 0 0 1.2em;">
+  <li><b>No Installation Required:</b> Ready to use out of the box—no installation needed.</li>
+  <li><b>100 Watts Powerful Motor:</b> Delivers strong performance for deep cleaning.</li>
+  <li><b>Powerful Suction:</b> Effectively removes dust, dirt, and debris from your car interior.</li>
+  <li><b>In-Built LED Torch:</b> Integrated LED light helps you clean dark or hard-to-reach areas.</li>
+  <li><b>Range of Accessories:</b> Includes multiple nozzles and attachments for different cleaning needs.</li>
+  <li><b>Universal Fit:</b> Designed to fit and be used in any car model.</li>
+</ul>`
+      },
+      {
+        name: "Towing cables",
+        price: 899,
+        image: "/images/towing cables.webp",
+        desc: `<ul style="text-align:left; margin:0 0 0 1.2em;">
+  <li><b>Shock Absorption:</b> Special processing procedure allows the rope to absorb towing jerks and reduce vibration between two cars during towing.</li>
+  <li><b>Fluorescent Color:</b> Bright, fluorescent color enhances safety, especially when used at night.</li>
+  <li><b>Forged Hook with Safety Latch:</b> Secure forged hook with safety latch prevents accidental detachment and makes it easy to attach or remove.</li>
+  <li><b>Reliable Towing Aid:</b> Helps tow your car away from breakdown locations safely and efficiently.</li>
+</ul>`
+      },
+      {
+        name: "Tyre inflators",
+        price: 2999,
+        image: "/images/tyre inflators.webp",
+        desc: `<ul style="text-align:left; margin:0 0 0 1.2em;">
+  <li><b>Versatile Companion for Home and Travel:</b> Compatible with both AC and 12V DC power sources, making it ideal for use at home or on the go.</li>
+  <li><b>Fast Inflation with Auto Shut-off:</b> Inflates flat tyres to standard pressure within 4 minutes and automatically shuts off at the preset pressure to prevent over-inflation. (Let the pump rest 5-10 minutes after every 8-minute use.)</li>
+  <li><b>Convenient Digital Display & Safety Lighting:</b> Clear digital display shows preset and real-time pressure. Built-in LED light enhances nighttime safety and visibility during emergencies.</li>
+  <li><b>Long Power Cords for Flexible Use:</b> Includes 13ft DC and 5ft AC power cords for easy access to any inflation area. Suitable for tyre pressures below 50psi and air cushions below 150psi.</li>
+</ul>`
+      }
+    ];
+    // Get selected product name from localStorage
+    const selectedName = localStorage.getItem("selectedProduct");
+    const product = products.find(p => p.name === selectedName);
+    const detailDiv = document.getElementById("productDetail");
+    if (!product) {
+      detailDiv.innerHTML = `<h2>Product Not Found</h2><a href="showroom.html" class="back-btn">Back to Showroom</a>`;
+    } else {
+      detailDiv.innerHTML = `
+        <img src="${product.image}" alt="${product.name}" class="product-img" />
+        <div class="product-title">${product.name}</div>
+        <div class="product-price">Rs. ${product.price}</div>
+        <div class="product-desc">${product.desc}</div>
+        <a href="showroom.html" class="back-btn">Back to Showroom</a>
+        <button class="add-to-cart-btn" id="addToCartBtn">Add to Cart</button>
+      `;
+      document.getElementById("addToCartBtn").addEventListener("click", function() {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const existing = cart.find(item => item.name === product.name);
+        if (existing) {
+          existing.quantity += 1;
+        } else {
+          cart.push({ name: product.name, quantity: 1, price: product.price });
+        }
+        localStorage.setItem("cart", JSON.stringify(cart));
+        alert("Added to cart!");
+      });
+    }
+  </script>
+</body>
+</html>
